@@ -1,0 +1,34 @@
+package com.ashimCS.Spring_ai.service;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@SpringBootTest
+public class AiServiceTests {
+
+    @Autowired
+    private AiService aiService;
+
+    @Test
+    public void testGetJoke() {
+        // now we will unit test it
+
+        String joke = aiService.getJoke("chickens");
+
+        assertNotNull(joke);
+        assertFalse(joke.isEmpty());
+        assertFalse(joke.isBlank());
+
+        System.out.println("Joke about chickens: " + joke);
+
+        // CS Anuj way:
+        var jokes = aiService.getJoke("chickens");
+        System.out.println(jokes);
+
+
+    }
+}
