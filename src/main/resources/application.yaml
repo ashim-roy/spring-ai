@@ -13,8 +13,18 @@ spring:
       genai:
         api-key: ${GEMINI_API_KEY}
         chat:
-          model: gemini-3.6-flash
+         # model: gemini-3.6-flash     # Fast   Higher Intelligence  Complex tasks
+          model: gemini-3.5-flash-lite      # very fast, good intelligence, learning and testing
+          options:
+            temperature: 0.8
+
 
     model:
       chat: google-genai
+
+
+logging:
+  level:
+    org.springframework.ai:
+      chat.client: DEBUG
 

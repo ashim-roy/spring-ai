@@ -17,18 +17,18 @@ public class AiServiceTests {
     public void testGetJoke() {
         // now we will unit test it
 
-        String joke = aiService.getJoke("chickens");
+        String joke = aiService.getJoke("cat");
 
         assertNotNull(joke);
         assertFalse(joke.isEmpty());
         assertFalse(joke.isBlank());
 
-        System.out.println("Joke about chickens: " + joke);
+        System.out.println( joke);
 
+       /*
         // CS Anuj way:
         var jokes = aiService.getJoke("chickens");
         System.out.println(jokes);
-
-
+        */
     }
 }
