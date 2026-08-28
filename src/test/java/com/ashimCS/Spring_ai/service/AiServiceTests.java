@@ -43,4 +43,13 @@ public class AiServiceTests {
     public void testToStoreData() {
         aiService.ingestDataToVectorStore();
     }
+
+    @Test
+    public void testSimilaritySearch() {
+        var response = aiService.similaritySearch("a team of people travel through a blackhole");
+        for (var doc: response) {
+            System.out.println(response);
+        }
+
+    }
 }

@@ -2,6 +2,7 @@ package com.ashimCS.Spring_ai.service;
 
 import com.ashimCS.Spring_ai.dto.JokeDto;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +49,20 @@ public class AiService {
                         Map.of("title", "The Notebook", "genre", "Romance", "year", 2004))
         );
         vectorStore.add(movies);
-
     }
+
+//    public List<Document>  similaritySearch(String inputText){
+//        return vectorStore.similaritySearch(inputText);
+//    }
+
+      public List<Document>  similaritySearch(String inputText){
+          List<Document> result = vectorStore.similaritySearch(SearchRequest.builder()
+                          .query(inputText)
+                          .topK(4)
+                          .similarityThreshold(0.3)
+                  .build());
+            return result;
+      }
 
 
     public String getJoke(String jokeTopic) {
