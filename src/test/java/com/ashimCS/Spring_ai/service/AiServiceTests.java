@@ -17,15 +17,11 @@ public class AiServiceTests {
     @Test
     public void testGetJoke() {
         // now we will unit test it
-
         String joke = aiService.getJoke("cat");
-
         assertNotNull(joke);
         assertFalse(joke.isEmpty());
         assertFalse(joke.isBlank());
-
         System.out.println( joke);
-
        /*
         // CS Anuj way:
         var jokes = aiService.getJoke("chickens");
@@ -41,5 +37,10 @@ public class AiServiceTests {
             System.out.println(e+ " ");
         }
 
+    }
+
+    @Test
+    public void testToStoreData() {
+        aiService.ingestDataToVectorStore();
     }
 }

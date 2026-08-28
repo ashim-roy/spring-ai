@@ -18,6 +18,7 @@ public class VectorStoreConfig {
 
         return PgVectorStore.builder(jdbcTemplate, embeddingModel)
                 .dimensions(1536) // Standard dimension size for OpenAI text-embedding-3-small
+                .initializeSchema(true)
                 .build();
     }
 }

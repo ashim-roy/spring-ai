@@ -1,6 +1,8 @@
 package com.ashimCS.Spring_ai.service;
 
 import com.ashimCS.Spring_ai.dto.JokeDto;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.VectorStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -18,18 +21,34 @@ public class AiService {
 
     private final ChatClient chatClient;
     private final EmbeddingModel  embeddingModel;
+    private final VectorStore  vectorStore;
 
-    public AiService(
-            ChatClient chatClient,
-            @Qualifier("openAiEmbeddingModel") EmbeddingModel embeddingModel) {
+        public AiService(  ChatClient chatClient,
+            @Qualifier("openAiEmbeddingModel") EmbeddingModel embeddingModel,
+                       VectorStore  vectorStore) {
 
         this.chatClient = chatClient;
         this.embeddingModel = embeddingModel;
+        this.vectorStore = vectorStore;
     }
-
 
     public float[] getEmbedding(String inputText){
         return  embeddingModel.embed(inputText); // returns an array of float
+    }
+
+    public void ingestDataToVectorStore(){
+        List<Document> movies = List.of(
+                new Document("A thief who steals corporate secrets through the use of dream-sharing technology.",
+                        Map.of("title", "Inception", "genre", "Sci-Fi", "year", 2010)),
+
+                new Document("A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+                        Map.of("title", "Interstellar", "genre", "Sci-Fi", "year", 2014)),
+
+                new Document("A poor yet passionate young man falls in love with a rich young woman, giving her a sense of freedom.",
+                        Map.of("title", "The Notebook", "genre", "Romance", "year", 2004))
+        );
+        vectorStore.add(movies);
+
     }
 
 
