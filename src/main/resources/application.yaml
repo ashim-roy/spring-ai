@@ -9,6 +9,17 @@ spring:
         options:
           model: qwen2.5:latest
 
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.9
+      embedding:
+        options:
+          model: text-embedding-3-small
+
+
     google:
       genai:
         api-key: ${GEMINI_API_KEY}
@@ -20,7 +31,8 @@ spring:
 
 
     model:
-      chat: google-genai
+      #chat: openai
+      chat: ollama
 
 
 logging:
