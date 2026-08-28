@@ -1,5 +1,6 @@
 package com.ashimCS.Spring_ai.service;
 
+import com.ashimCS.Spring_ai.dto.JokeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -33,10 +34,21 @@ public class AiService {
                         new SimpleLoggerAdvisor()
                 )
                 .call()
+                .entity(JokeDto.class);
+
+        return response.text();
+
+
+        /*
+        var response = chatClient.prompt()
+                .user(renderedText)
+                .advisors(
+                        new SimpleLoggerAdvisor()
+                )
+                .call()
                 .chatClientResponse();
-
-        return response.chatResponse().getResult().getOutput().getText();
-
+          return response.chatResponse().getResult().getOutput().getText();
+         */
 
 //        return chatClient.prompt()
 //                .system("You are a funny comedian. You will be given a topic, and you will respond with a joke about that topic. Keep it short and funny.")
