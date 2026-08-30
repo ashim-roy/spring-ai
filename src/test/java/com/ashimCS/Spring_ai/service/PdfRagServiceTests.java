@@ -17,4 +17,12 @@ public class PdfRagServiceTests {
     }
 
 
+    @Test
+    public void testAskAi() {
+        var response = pdfRagService.askAi("live class is lagging");
+        System.out.println(response);
+
+    }
+
+
 }
