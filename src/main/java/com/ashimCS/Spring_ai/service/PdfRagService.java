@@ -6,7 +6,6 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
