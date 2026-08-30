@@ -53,6 +53,27 @@ public class PdfRagService {
 
     //RAG part
     public String askAi(String prompt) {
+
+        // provide the context, will get from vector store and search on similarity
+        // Take what is rag?, convert it into an embedding, search my vector database, and give me the 2 most relevant documents."
+        // Step 1 — Search pgvector - performs embedding + vector search
+        List<Document> documents =
+                vectorStore.similaritySearch(
+                        SearchRequest.builder()
+                                .query(prompt)
+                                .similarityThreshold(0.5)
+                                .topK(2)
+                                .filterExpression("file_name == 'faq.pdf'")
+                                .build()
+                );
+
+        // converting document into String
+        // Step 2 — Convert Documents into context
+        String context = documents.stream()
+                .map(Document::getText)
+                .collect(Collectors.joining("\n\n"));
+
+        // Step 3 — Create prompt template
         String template = """
                 You are an AI assistant helping a developer.
                 
@@ -69,28 +90,8 @@ public class PdfRagService {
                 Answer in a friendly, conversational tone.
                 """;
 
-        // provide the context, will get from vector store and search on similarity
-        // Take what is rag?, convert it into an embedding, search my vector database, and give me the 2 most relevant documents."
-        // Step 2 — Search pgvector - performs embedding + vector search
-        List<Document> documents =
-                vectorStore.similaritySearch(
-                        SearchRequest.builder()
-                                .query(prompt)
-                                .similarityThreshold(0.5)
-                                .topK(2)
-                                .filterExpression("file_name == 'faq.pdf'")
-                                .build()
-                );
-
-        // converting document into String
-        // Step 3 — Convert Documents into context
-        String context = documents.stream()
-                .map(Document::getText)
-                .collect(Collectors.joining("\n\n"));
-
-        // converting this into prompt template
+        // // Step 4 — Inject context into prompt - converting this into prompt template
         PromptTemplate promptTemplate = new PromptTemplate(template);
-        //  Step 4 — Put the context into the prompt
         String systemPrompt = promptTemplate.render(Map.of("context", context));
 
         // Step 5 — Send context + question to the LLM
