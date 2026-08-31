@@ -10,9 +10,10 @@ public class AdvisorServiceTests {
     @Autowired
     private AdvisorService advisorService;
 
+
     @Test
     public void askAiWithAdvisorsTest() {
-        String response = advisorService.askAiWithAdvisors("my name is Ashim, can't view live class, what to do?", "ashim123");
+        String response = advisorService.askAiWithAdvisors("hi, can you tell what do you know about me?", "rohit45");
 
     }
 }

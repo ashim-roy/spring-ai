@@ -2,6 +2,12 @@ spring:
   application:
     name: Spring-ai
 
+  datasource:
+    url: jdbc:postgresql://localhost:5434/postgres_vector
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+
   ai:
     ollama:
       base-url: http://localhost:11434
@@ -38,11 +44,11 @@ spring:
       pgvector:
         initialize-schema: true
 
-  datasource:
-    url: jdbc:postgresql://localhost:5434/postgres_vector
-    username: user
-    password: password
-    driver-class-name: org.postgresql.Driver
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
 
 logging:
   level:

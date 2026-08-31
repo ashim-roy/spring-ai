@@ -2,8 +2,12 @@ package com.ashimCS.Spring_ai.config;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 @Configuration
 public class AIConfig {
@@ -14,6 +18,16 @@ public class AIConfig {
                 .defaultAdvisors(new SimpleLoggerAdvisor())
                 .build();
     }
+
+
+    @Bean
+    public ChatMemory chatMemory(JdbcChatMemoryRepository  chatMemoryRepository) {
+        return MessageWindowChatMemory.builder()
+                .chatMemoryRepository(chatMemoryRepository)
+                .maxMessages(10)
+                .build();
+    }
+
 
 //    @Bean
 //    public ChatClient chatClient(ChatClient.Builder builder) {  //Spring, give me a ChatClient.Builder
