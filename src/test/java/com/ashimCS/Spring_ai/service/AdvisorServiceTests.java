@@ -13,7 +13,7 @@ public class AdvisorServiceTests {
 
     @Test
     public void askAiWithAdvisorsTest() {
-        String response = advisorService.askAiWithAdvisors("hi, can you tell what do you know about me?", "rohit45");
+        String response = advisorService.askAiWithAdvisors("hi, what is the top place sto visit in mumbai?", "rohit45");
 
     }
 }
