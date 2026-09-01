@@ -3,9 +3,11 @@ package com.ashimCS.Spring_ai.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.VectorStoreChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
@@ -38,12 +40,16 @@ public class AdvisorService {
                                                 .build(),
                         VectorStoreChatMemoryAdvisor.builder(vectorStore)
                                 .defaultTopK(4)
+                                .build(),
+                        QuestionAnswerAdvisor.builder(vectorStore)
+                                .searchRequest(SearchRequest.builder()
+                                        .filterExpression("file_name =='faq.pdf'")
+                                        .build())
                                 .build()
-
                 )
                 // Conversation ID is supplied HERE -conversationId applies to both
                 .advisors(a -> a.param(
-                        ChatMemory.CONVERSATION_ID,
+                        CONVERSATION_ID,
                         userId
                 ))
                 .call()
