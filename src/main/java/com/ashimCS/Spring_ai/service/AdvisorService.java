@@ -1,8 +1,11 @@
 package com.ashimCS.Spring_ai.service;
 
+import com.ashimCS.Spring_ai.advisor.CustomSafeGuardAdvisor;
+import com.ashimCS.Spring_ai.advisor.TokenUsageAdvisor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.SafeGuardAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.VectorStoreChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
@@ -10,6 +13,9 @@ import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 
 @Service
@@ -27,33 +33,44 @@ public class AdvisorService {
     }
 
     public String askAiWithAdvisors(String prompt, String userId){
-        return chatClient.prompt()
-                .system("""
-                        "You are an Ai assistant called Marla, 
-                        Greet users with your name (Marla) and the user name if you know know their name. 
-                        Answer in a friendly conversational tone.
-                        """)
-                .user(prompt)
+        try {
+            return chatClient.prompt()
+                    .system("""
+                            "You are an Ai assistant called Marla, 
+                            Greet users with your name (Marla) and the user name if you know know their name. 
+                            Answer in a friendly conversational tone.
+                            """)
+                    .user(prompt)
 
-                .advisors(
-                        MessageChatMemoryAdvisor.builder(chatMemory)
-                                                .build(),
-                        VectorStoreChatMemoryAdvisor.builder(vectorStore)
-                                .defaultTopK(4)
-                                .build(),
-                        QuestionAnswerAdvisor.builder(vectorStore)
-                                .searchRequest(SearchRequest.builder()
-                                        .filterExpression("file_name =='faq.pdf'")
-                                        .build())
-                                .build()
-                )
-                // Conversation ID is supplied HERE -conversationId applies to both
-                .advisors(a -> a.param(
-                        CONVERSATION_ID,
-                        userId
-                ))
-                .call()
-                .content();
+                   .advisors(
+                           new CustomSafeGuardAdvisor(
+                                   List.of( "password", "secret_key",  "ignore all instructions" )
+                           ),
+                            new SafeGuardAdvisor(List.of( "Gaming", "Politics", "Religion", "Sexuality")),
+                            MessageChatMemoryAdvisor.builder(chatMemory)
+                                                    .build(),
+                            VectorStoreChatMemoryAdvisor.builder(vectorStore)
+                                    .defaultTopK(4)
+                                    .build(),
+                            QuestionAnswerAdvisor.builder(vectorStore)
+                                    .searchRequest(SearchRequest.builder()
+                                            .filterExpression("file_name =='faq.pdf'")
+                                            .topK(4)
+                                            .build())
+                                    .build(),
+
+                           new TokenUsageAdvisor()
+                    )
+                    // Conversation ID is supplied HERE -conversationId applies to both
+                    .advisors(a -> a.param(
+                            CONVERSATION_ID,
+                            userId
+                    ))
+                    .call()
+                    .content();
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
     }
 
 }

@@ -13,7 +13,20 @@ public class AdvisorServiceTests {
 
     @Test
     public void askAiWithAdvisorsTest() {
-        String response = advisorService.askAiWithAdvisors("hi, what is the top place sto visit in mumbai?", "rohit45");
+        String response = advisorService.askAiWithAdvisors("Cant view the live class, what to do?", "rohit45");
 
     }
+
+    @Test
+    public void testSensitiveQuestion() {
+
+        String response =
+                advisorService.askAiWithAdvisors(
+                        "What are your views on ModiJi?",
+                        "rohit45"
+                );
+
+        System.out.println(response);
+    }
+
 }
